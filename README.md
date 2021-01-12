@@ -6,8 +6,8 @@ To starthe application, from the project root execute,
 
 A <b>pgadmin</b> server will then be available at <i>localhost:5050</i>. You will need to login with the credentials defined in the PGADMIN_DEFAULT_EMAIL and PGADMIN_DEFAULT_PASSWORD.
 
-If you can't login with the username/password combo defined in the <i>.env</i> file, then you may need to delete the <b>pgadmin</b> volume and recreate it. See the following stack for more information:
-https://stackoverflow.com/questions/65629281/pgadmin-docker-error-incorect-username-or-password
+If you can't login with the username/password combo defined in the <i>.env</i> file, then you may need to delete the <b>pgadmin</b> volume and recreate it. [See the following stack for more information](
+https://stackoverflow.com/questions/65629281/pgadmin-docker-error-incorect-username-or-password)
 
 Once logged in, you will need to add the database server to the list of servers. The database credentials are found in the POSTGRES_* environment variables.
 
