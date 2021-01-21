@@ -7,5 +7,4 @@ WORKDIR /pgadmin4
 COPY entrypoint.sh /entrypoint.sh
 
 USER pgadmin
-WORKDIR /pgadmin4
 ENTRYPOINT ["/entrypoint.sh"]
