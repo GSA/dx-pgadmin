@@ -29,3 +29,4 @@ Once logged in, you will need to add the database server to the list of servers.
 - [CMD vs ENTRYPOINT](https://stackoverflow.com/questions/21553353/what-is-the-difference-between-cmd-and-entrypoint-in-a-dockerfile)
 - [Postgres Syntax Error At Or Near IF](https://stackoverflow.com/questions/20957292/postgres-syntax-error-at-or-near-if)
 - [Postgres If Statement](https://stackoverflow.com/questions/11299037/postgresql-if-statement)
+- [Check If Database Exists From BASH](https://stackoverflow.com/questions/14549270/check-if-database-exists-in-postgresql-using-shell)

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#########################
+# DATABASE INITIALIZATION
+#########################
+
 dbs=($CCDA_DB_NAME $SOLUTIONID_DB_NAME $CALC_DB_NAME)
 users=($CCDA_DB_USER $SOLUTIONID_DB_USER $CALC_DB_USER)
 passwords=($CCDA_DB_PASSWORD $SOLUTIONID_DB_PASSWORD $CALC_DB_PASSWORD)
@@ -19,29 +23,56 @@ function execute_sql(){
     PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -c "$1"
 }
 
+function list_databases(){
+    PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -lqt
+}
+
+function database_exists(){
+    if list_databases | cut -d \| -f 1 | grep -qw "$1" 
+    then
+        echo 0
+    else
+        echo 1
+    fi
+}
+
 sleep 5s
+
 
 for i in ${dbs[@]}
 do
-    db_index="$(get_db_index $i)"
-    user=${users[$db_index]}
-    password=${passwords[$db_index]}
+    exists=$(database_exists $i)
 
-    CREATE_CMD="CREATE DATABASE $i;"
-    USER_CMD="CREATE USER $user WITH ENCRYPTED PASSWORD '$password';"
-    GRANT_CMD="GRANT ALL PRIVILEGES ON DATABASE $i TO $user;"
+    if [ "$exists" == 0 ]
+    then
+        echo "NOTE: $i Database Already Exists, Skipping Creation"
+    else
+        db_index="$(get_db_index $i)"
+        user=${users[$db_index]}
+        password=${passwords[$db_index]}
 
-    echo "$i Database Configuration"
-    echo "--------"
-    echo "Creating Database: $i"
-    execute_sql "$CREATE_CMD"
+        echo "$i Database Configuration"
+        echo "-------------------------"
 
-    echo "Creating User : $user"
-    execute_sql "$USER_CMD"
+        echo "Creating Database: $i"
+        CREATE_CMD="CREATE DATABASE $i;"
+        execute_sql "$CREATE_CMD"
 
-    echo "Granting User : $user All Privileges On Database : $i"
-    execute_sql "$GRANT_CMD"
+        echo "Creating User : $user"
+        USER_CMD="CREATE USER $user WITH ENCRYPTED PASSWORD '$password';"
+        execute_sql "$USER_CMD"
+
+        echo "Granting User : $user All Privileges On Database : $i"
+        GRANT_CMD="GRANT ALL PRIVILEGES ON DATABASE $i TO $user;"
+        execute_sql "$GRANT_CMD"
+    fi
+    
 done
+echo "-------------------------"
+
+##################################
+# START DEFAULT PGADMIN ENTRYPOINT
+##################################
 
 # Populate config_distro.py. This has some default config, as well as anything
 # provided by the user through the PGADMIN_CONFIG_* environment variables.
