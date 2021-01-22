@@ -27,10 +27,6 @@ If you need to launch the application fresh, i.e. recreate the pgadmin and postg
 
 This is especially important if you happen to change the <b>PGADMIN_DEFAULT_EMAIL</b> and <b>PGADMIN_DEFAULT_PASSWORD</b>, as the retained volumes will persist the old values of these environment variables until the volume is pruned.
 
-# TODOS
-
-1. Load in server connections before containers go up so user doesn't have to manually add the connections. (Harder than it sounds!)
-
 # Useful Links
 
 ## Postgres
