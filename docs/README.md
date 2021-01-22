@@ -21,6 +21,12 @@ A <b>pgadmin</b> server will then be available at <i>localhost:5050</i>. You wil
 If you can't login with the username/password combo defined in the <i>.env</i> file, then you may need to delete the <b>pgadmin</b> volume and recreate it. [See the following stack for more information](
 https://stackoverflow.com/questions/65629281/pgadmin-docker-error-incorect-username-or-password)
 
+# Tips
+
+If you need to launch the application fresh, i.e. recreate the pgadmin and postgres configuration databases, recreate databases, etc, then you need to make sure you wipe the Docker volumes mounted through the <i>docker-compose.yml</i>; <i>docker-compose down</i> is not sufficient. You can use the <i>/scripts/detonate.sh</i> to purge your local Docker of all traces of this application. After invoking the script, the next <i>docker-compose up</i> will recreate the images, volumes and network. 
+
+This is especially important if you happen to change the <b>PGADMIN_DEFAULT_EMAIL</b> and <b>PGADMIN_DEFAULT_PASSWORD</b>, as the retained volumes will persist the old values of these environment variables until the volume is pruned.
+
 # TODOS
 
 1. Load in server connections before containers go up so user doesn't have to manually add the connections. (Harder than it sounds!)

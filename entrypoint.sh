@@ -57,6 +57,7 @@ do
         user=${users[$db_index]}
         password=${passwords[$db_index]}
 
+        echo "-------------------------"
         echo "$i Database Configuration"
         echo "-------------------------"
 
