@@ -11,12 +11,12 @@ passwords=($CCDA_DB_PASSWORD $SOLUTIONID_DB_PASSWORD $CALC_DB_PASSWORD)
 
 function get_db_index(){
     for i in "${!dbs[@]}"
-        do 
-            if [[ "${dbs[$i]}" = "$1" ]]
-            then
-                echo "${i}"
-            fi 
-        done
+    do 
+        if [[ "${dbs[$i]}" = "$1" ]]
+        then
+            echo "${i}"
+        fi 
+    done
 }
 
 function execute_sql(){
