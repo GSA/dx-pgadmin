@@ -36,8 +36,14 @@ function database_exists(){
     fi
 }
 
+nl=$'\n'
 sleep 5s
 
+if [ ! -f "/credentials/pgpassfile" ]
+then
+    touch /credentials/pgpassfile
+    echo "$POSTGRES_HOST:$POSTGRES_PORT:*:$POSTGRES_USER:$POSTGRES_PASSWORD ${nl}" >> /credentials/pgpassfile
+fi
 
 for i in ${dbs[@]}
 do
@@ -65,10 +71,19 @@ do
         echo "Granting User : $user All Privileges On Database : $i"
         GRANT_CMD="GRANT ALL PRIVILEGES ON DATABASE $i TO $user;"
         execute_sql "$GRANT_CMD"
+
+        echo "Configuring PGPASSFILE for User $user on Database $i"
+        echo "$POSTGRES_HOST:$POSTGRES_PORT:$i:$user:$password ${nl}" >> /credentials/pgpassfile
     fi
     
 done
 echo "-------------------------"
+
+echo "Configuring PGAdmin4's servers.json With Secret Credentials"
+sed -i "s/__username__/$POSTGRES_USER/g" /servers/servers.json
+sed -i "s/__host__/$POSTGRES_HOST/g" /servers/servers.json
+sed -i "s/__port__/$POSTGRES_PORT/g" /servers/servers.json
+
 
 ##################################
 # START DEFAULT PGADMIN ENTRYPOINT

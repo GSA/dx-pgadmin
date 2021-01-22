@@ -41,9 +41,12 @@ https://stackoverflow.com/questions/65629281/pgadmin-docker-error-incorect-usern
 ## PGAdmin
 - [PGAdmin4 Docker Repo](https://hub.docker.com/r/dpage/pgadmin4/)
 - [PGAdmin4 Container Git Repo](https://github.com/postgres/pgadmin4)
+- [PGAdmin Container Deployment](https://www.enterprisedb.com/edb-docs/d/pgadmin-4/reference/online-documentation/4.14/container_deployment.html)
 - [Provisioning PGAdmin Container With Connections and Passwords](https://technology.amis.nl/continuous-delivery/provisioning/pgadmin-in-docker-provision-connections-and-passwords/)
+- [PGAdmin4 Import/Export Servers](https://www.pgadmin.org/docs/pgadmin4/development/import_export_servers.html)
 
 ## BASH
 - [Get Index of Value In BASH Array](https://stackoverflow.com/questions/15028567/get-the-index-of-a-value-in-a-bash-array)
 - [CMD vs ENTRYPOINT](https://stackoverflow.com/questions/21553353/what-is-the-difference-between-cmd-and-entrypoint-in-a-dockerfile)
 - [Check If Database Exists From BASH](https://stackoverflow.com/questions/14549270/check-if-database-exists-in-postgresql-using-shell)
+- [Append to File](https://stackoverflow.com/questions/6207573/how-to-append-output-to-the-end-of-a-text-file)
