@@ -8,6 +8,7 @@ dbs=($CCDA_DB_NAME $SOLUTIONID_DB_NAME $CALC_DB_NAME)
 users=($CCDA_DB_USER $SOLUTIONID_DB_USER $CALC_DB_USER)
 passwords=($CCDA_DB_PASSWORD $SOLUTIONID_DB_PASSWORD $CALC_DB_PASSWORD)
 
+echo "Here is the host name: $POSTGRES_HOST"
 
 function get_db_index(){
     for i in "${!dbs[@]}"
