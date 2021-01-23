@@ -16,24 +16,28 @@ function get_db_index(){
         if [[ "${dbs[$i]}" = "$1" ]]
         then
             echo "${i}"
+            exit 0
         fi 
     done
+    exit 1
 }
 
 function execute_sql(){
     PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -c "$1"
+    exit 0
 }
 
 function list_databases(){
     PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -lqt
+    exit 0
 }
 
 function database_exists(){
     if list_databases | cut -d \| -f 1 | grep -qw "$1" 
     then
-        echo 0
+        echo 0 && exit 0
     else
-        echo 1
+        echo 1 && exit 1
     fi
 }
 
