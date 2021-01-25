@@ -9,6 +9,9 @@ users=($CCDA_DB_USER $SOLUTIONID_DB_USER $CALC_DB_USER)
 passwords=($CCDA_DB_PASSWORD $SOLUTIONID_DB_PASSWORD $CALC_DB_PASSWORD)
 
 echo "Here is the host name: $POSTGRES_HOST"
+echo "Here is postgres admin user: $POSTGRES_USER"
+echo "Here is the solutionid user and db: ($SOLUTIONID_DB_USER, $SOLUTIONID_DB_NAME)"
+echo "Here is the calc user and db: ($CALC_DB_USER, $CALC_DB_NAME)" 
 
 function get_db_index(){
     for i in "${!dbs[@]}"
@@ -22,11 +25,13 @@ function get_db_index(){
 }
 
 function execute_sql(){
-    PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -c "$1"
+    echo "PGPASSWORD=xxxx psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER"
+    echo "command: $1"
+    PGPASSWORD=$POSTGRES_PASSWORD psql --echo-errors --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER --command="$1"
 }
 
 function list_databases(){
-    PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -lqt
+    PGPASSWORD=$POSTGRES_PASSWORD psql --echo-errors --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER -lqt
 }
 
 function database_exists(){
