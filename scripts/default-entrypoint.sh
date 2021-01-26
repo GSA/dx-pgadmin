@@ -1,99 +1,5 @@
 #!/bin/bash
 
-#########################
-# DATABASE INITIALIZATION
-#########################
-
-dbs=($CCDA_DB_NAME $SOLUTIONID_DB_NAME $CALC_DB_NAME)
-users=($CCDA_DB_USER $SOLUTIONID_DB_USER $CALC_DB_USER)
-passwords=($CCDA_DB_PASSWORD $SOLUTIONID_DB_PASSWORD $CALC_DB_PASSWORD)
-
-echo "Here is the host name: $POSTGRES_HOST"
-echo "Here is postgres admin user: $POSTGRES_USER"
-echo "Here is the solutionid user and db: ($SOLUTIONID_DB_USER, $SOLUTIONID_DB_NAME)"
-echo "Here is the calc user and db: ($CALC_DB_USER, $CALC_DB_NAME)" 
-
-function get_db_index(){
-    for i in "${!dbs[@]}"
-    do 
-        if [[ "${dbs[$i]}" = "$1" ]]
-        then
-            echo "${i}"
-        fi 
-    done
-}
-
-function execute_sql(){
-    echo "PGPASSWORD=xxxx psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER"
-    PGPASSWORD=$POSTGRES_PASSWORD psql --echo-errors --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER --command="$1"
-}
-
-function list_databases(){
-    PGPASSWORD=$POSTGRES_PASSWORD psql --echo-errors --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER -lqt
-}
-
-function database_exists(){
-    if list_databases | cut -d \| -f 1 | grep -qw "$1" 
-    then
-        echo 0
-    else
-        echo 1
-    fi
-}
-
-nl=$'\n'
-if [ "$APP_ENV" == "local" ] 
-then
-    sleep 5s
-fi
-
-if [ ! -f "/credentials/pgpassfile" ]
-then
-    touch /credentials/pgpassfile
-    echo "$POSTGRES_HOST:$POSTGRES_PORT:*:$POSTGRES_USER:$POSTGRES_PASSWORD ${nl}" >> /credentials/pgpassfile
-fi
-
-for i in ${dbs[@]}
-do
-    exists=$(database_exists $i)
-
-    if [ "$exists" == 0 ]
-    then
-        echo "NOTE: $i Database Already Exists, Skipping Creation"
-    else
-        db_index="$(get_db_index $i)"
-        user=${users[$db_index]}
-        password=${passwords[$db_index]}
-
-        echo "-------------------------"
-        echo "$i Database Configuration"
-        echo "-------------------------"
-
-        echo "Creating Database='$i'"
-        CREATE_CMD="CREATE DATABASE $i;"
-        execute_sql "$CREATE_CMD"
-
-        echo "Creating User='$user'"
-        USER_CMD="CREATE USER $user WITH ENCRYPTED PASSWORD '$password';"
-        execute_sql "$USER_CMD"
-
-        echo "Granting User='$user' All Privileges On Database='$i'"
-        GRANT_CMD="GRANT ALL PRIVILEGES ON DATABASE $i TO $user;"
-        execute_sql "$GRANT_CMD"
-
-        echo "Configuring PGPASSFILE for User='$user' on Database='$i'"
-        echo "$POSTGRES_HOST:$POSTGRES_PORT:$i:$user:$password ${nl}" >> /credentials/pgpassfile
-    fi
-    
-done
-echo "-------------------------"
-
-echo "Configuring PGAdmin4's 'servers.json' With Secret Credentials"
-sed -i "s/__username__/$POSTGRES_USER/g" /servers/servers.json
-sed -i "s/__host__/$POSTGRES_HOST/g" /servers/servers.json
-sed -i "s/__port__/$POSTGRES_PORT/g" /servers/servers.json
-
-
 ##################################
 # START DEFAULT PGADMIN ENTRYPOINT
 ##################################
@@ -156,6 +62,9 @@ TIMEOUT=$(cd /pgadmin4 && python -c 'import config; print(config.SESSION_EXPIRAT
 
 # NOTE: currently pgadmin can run only with 1 worker due to sessions implementation
 # Using --threads to have multi-threaded single-process worker
+
+# QUEUE UP DB CREATION AND SERVER POPULATION
+# echo "post_start_setup" | at now +2 minutes
 
 if [ ! -z ${PGADMIN_ENABLE_TLS} ]; then
     exec gunicorn --timeout ${TIMEOUT} --bind ${PGADMIN_LISTEN_ADDRESS:-[::]}:${PGADMIN_LISTEN_PORT:-443} -w 1 --threads ${GUNICORN_THREADS:-25} --access-logfile ${GUNICORN_ACCESS_LOGFILE:--} --keyfile /certs/server.key --certfile /certs/server.cert -c gunicorn_config.py run_pgadmin:app
