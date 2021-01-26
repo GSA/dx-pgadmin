@@ -87,12 +87,11 @@ function create_dbs(){
 function configure_pgadmin(){
     if [ -f "/credentials/pgpassfile" ]
     then
-        rm -R /credentials/pgpassfile
+        > /credentials/pgpassfile
     fi
 
     log "Configuring PGPASSFILE for Admin User: $POSTGRES_USER" "configure_pgadmin"
-    touch /credentials/pgpassfile
-    echo "$POSTGRES_HOST:$POSTGRES_PORT:*:$POSTGRES_USER:$POSTGRES_PASSWORD ${nl}" >> /credentials/pgpassfile
+    echo "$POSTGRES_HOST:$POSTGRES_PORT:*:$POSTGRES_USER:$POSTGRES_PASSWORD" >> /credentials/pgpassfile
 
     for i in ${dbs[@]}
     do
@@ -101,7 +100,7 @@ function configure_pgadmin(){
         password=${passwords[$db_index]}
         
         log "Configuring PGPASSFILE for User='$user' on Database='$i'" "configure_pgadmin"
-        echo "$POSTGRES_HOST:$POSTGRES_PORT:$i:$user:$password ${nl}" >> /credentials/pgpassfile
+        echo "$POSTGRES_HOST:$POSTGRES_PORT:$i:$user:$password" >> /credentials/pgpassfile
     done
 
     log "Configuring PGAdmin4's 'servers.json' With Secret Credentials" "configure_pgadmin"
