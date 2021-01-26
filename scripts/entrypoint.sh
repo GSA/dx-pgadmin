@@ -21,12 +21,10 @@ function get_db_index(){
             echo "${i}"
         fi 
     done
-    exit 1
 }
 
 function execute_sql(){
     echo "PGPASSWORD=xxxx psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER"
-    echo "command: $1"
     PGPASSWORD=$POSTGRES_PASSWORD psql --echo-errors --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER --command="$1"
 }
 
@@ -44,7 +42,10 @@ function database_exists(){
 }
 
 nl=$'\n'
-sleep 5s
+if [ "$APP_ENV" == "local" ] 
+then
+    sleep 5s
+fi
 
 if [ ! -f "/credentials/pgpassfile" ]
 then
@@ -68,26 +69,26 @@ do
         echo "$i Database Configuration"
         echo "-------------------------"
 
-        echo "Creating Database: $i"
+        echo "Creating Database='$i'"
         CREATE_CMD="CREATE DATABASE $i;"
         execute_sql "$CREATE_CMD"
 
-        echo "Creating User : $user"
+        echo "Creating User='$user'"
         USER_CMD="CREATE USER $user WITH ENCRYPTED PASSWORD '$password';"
         execute_sql "$USER_CMD"
 
-        echo "Granting User : $user All Privileges On Database : $i"
+        echo "Granting User='$user' All Privileges On Database='$i'"
         GRANT_CMD="GRANT ALL PRIVILEGES ON DATABASE $i TO $user;"
         execute_sql "$GRANT_CMD"
 
-        echo "Configuring PGPASSFILE for User $user on Database $i"
+        echo "Configuring PGPASSFILE for User='$user' on Database='$i'"
         echo "$POSTGRES_HOST:$POSTGRES_PORT:$i:$user:$password ${nl}" >> /credentials/pgpassfile
     fi
     
 done
 echo "-------------------------"
 
-echo "Configuring PGAdmin4's servers.json With Secret Credentials"
+echo "Configuring PGAdmin4's 'servers.json' With Secret Credentials"
 sed -i "s/__username__/$POSTGRES_USER/g" /servers/servers.json
 sed -i "s/__host__/$POSTGRES_HOST/g" /servers/servers.json
 sed -i "s/__port__/$POSTGRES_PORT/g" /servers/servers.json
