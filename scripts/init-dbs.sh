@@ -28,11 +28,11 @@ function get_db_index(){
 
 function execute_sql(){
     log "PGPASSWORD=xxxx psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER" "execute_sql"
-    PGPASSWORD=$POSTGRES_PASSWORD psql --echo-errors --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER --command="$1"
+    PGPASSWORD=$POSTGRES_PASSWORD psql --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER --command="$1"
 }
 
 function list_databases(){
-    PGPASSWORD=$POSTGRES_PASSWORD psql --echo-errors --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER -lqt
+    PGPASSWORD=$POSTGRES_PASSWORD psql --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER -lqt
 }
 
 function database_exists(){
