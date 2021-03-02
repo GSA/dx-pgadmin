@@ -7,6 +7,10 @@ users=($CCDA_DB_USER $SOLUTIONID_DB_USER $CALC_DB_USER)
 passwords=($CCDA_DB_PASSWORD $SOLUTIONID_DB_PASSWORD $CALC_DB_PASSWORD)
 nl=$'\n'
 
+function log(){
+    echo -e "\e[92m$(date +"%r")\e[0m: \e[4;32m$2\e[0m : >> $1"
+}
+
 function get_db_index(){
     for i in "${!dbs[@]}"
     do 
