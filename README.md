@@ -47,6 +47,8 @@ This is especially important if you happen to change the <b>PGADMIN_DEFAULT_EMAI
 - [Provisioning PGAdmin Container With Connections and Passwords](https://technology.amis.nl/continuous-delivery/provisioning/pgadmin-in-docker-provision-connections-and-passwords/)
 - [PGAdmin4 Import/Export Servers](https://www.pgadmin.org/docs/pgadmin4/development/import_export_servers.html)
 - [PGAdmin Helm Chart Example](https://github.com/rowanruseler/helm-charts/blob/master/charts/pgadmin4/values.yaml)
+- [pg_restore file not found](https://unix.stackexchange.com/questions/561080/usr-bin-pg-restore-file-not-found-please-correct-the-binary-path-in-the-pref)
+- [Preferences](https://www.pgadmin.org/docs/pgadmin4/development/preferences.html)
 
 ## BASH
 - [Get Index of Value In BASH Array](https://stackoverflow.com/questions/15028567/get-the-index-of-a-value-in-a-bash-array)
