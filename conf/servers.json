@@ -8,7 +8,7 @@
             "Host": "__host__",
             "SSLMode": "prefer",
             "MaintenanceDB": "postgres",
-            "PassFile": "/servers/servers.json"
+            "PassFile": "__passfile___"
         }
     }
 }
