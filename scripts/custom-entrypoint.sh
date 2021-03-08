@@ -50,7 +50,6 @@ function configure_pgadmin(){
     sed -i "s/__username__/$POSTGRES_USER/g" /servers/servers.json
     sed -i "s/__host__/$POSTGRES_HOST/g" /servers/servers.json
     sed -i "s/__port__/$POSTGRES_PORT/g" /servers/servers.json
-    sed -i "s/__passfile__/$PGPASSFILE/g" /servers/servers.json
     
 }
 
