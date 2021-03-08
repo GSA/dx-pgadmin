@@ -11,5 +11,6 @@ COPY /scripts/init-dbs.sh /init-dbs.sh
 COPY /scripts/configure-pgadmin.sh /configure-pgadmin.sh
 COPY /scripts/custom-entrypoint.sh /entrypoint.sh
 RUN chown -R pgadmin:pgadmin /servers && chown -R pgadmin:pgadmin /credentials && \
-    chown pgadmin:pgadmin /init-dbs.sh /configure-pgadmin.sh /entrypoint.sh
+    chown pgadmin:pgadmin /init-dbs.sh /configure-pgadmin.sh /entrypoint.sh && \
+    chmod -c 770 /entrypoint.sh && chmod -c 770 /init-dbs.sh && chmod -c 770 /configure-pgadmin.sh
 USER pgadmin
