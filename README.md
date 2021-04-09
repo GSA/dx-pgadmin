@@ -21,6 +21,15 @@ A <b>pgadmin</b> server will then be available at <i>localhost:5050</i>. You wil
 Along those lines, if you can't login with the username/password combo defined in the <i>.env</i> file, then you may need to delete the <b>pgadmin</b> volume and recreate it. [See the following stack for more information](
 https://stackoverflow.com/questions/65629281/pgadmin-docker-error-incorect-username-or-password)
 
+IMPORTANT! Due to the way MCaaS is setup, the database creation script has to be run after the pod is healthy. The script <i>init-dbs</i> needs to be executed inside of the <b>pgadmin</b> container after the pod launches to initialize the databases within the <b>postgres</b> server. Remember, we do not have access to the postgres service, so all database initialize has to be done with in the <b>pgadmin</b> container.
+
+To create the databases after the container is spun up, start a shell session inside of the container and execute the necessary script,
+
+`docker exec -it dx-pgadmin_pgadmin_1 bash`<br>
+`/init-dbs.sh`<br>
+
+On the MCaaS environment, the admins will need to manually exec into the pod to execute this script. This process must be done everytime a database is initialized in a new environment.
+
 # Tips
 
 If you need to launch the application fresh, i.e. recreate the pgadmin and postgres configuration databases, recreate databases, etc, then you need to make sure you wipe the Docker volumes mounted through the <i>docker-compose.yml</i>; <i>docker-compose down</i> is not sufficient. You can use the <i>/scripts/detonate.sh</i> to purge your local Docker of all traces of this application. After invoking the script, the next <i>docker-compose up</i> will recreate the images, volumes and network. 

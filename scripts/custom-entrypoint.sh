@@ -53,7 +53,7 @@ function configure_pgadmin(){
     
 }
 
-log "Invoking 'configure_pgadmin' Function" "init-dbs_script"
+log "Invoking 'configure_pgadmin' Function" "custom_entrypoint"
 configure_pgadmin
 
 ##################################
