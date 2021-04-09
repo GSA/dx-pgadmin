@@ -1,3 +1,12 @@
+# NOTE: While the entrypoint also performs the tasks in this script, I've
+#       separated them here into their own script because the pgadmin
+#       container sometimes restarts due to a known issue with its logging.
+#       (Basically, pgadmin keeps accumulating logs or something and that
+#         eventually causes it to fail; I think, anyway, there's some github
+#         issues out there about it.) If it restarts, you may need to 
+#       reconfigure the credentials files pgadmin uses to connect to the
+#       database servers.
+
 # Script Directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -47,7 +56,7 @@ function configure_pgadmin(){
     done
 
     # Use regex to inject credentials. 
-    # Possible TODO: Use 'envsubst' instead of sed. Would make it cleaner. 
+    # Possible TODO: Use 'envsubst' instead of 'sed'. Would make it cleaner. 
     log "Configuring PGAdmin4's 'servers.json' With Secret Credentials" "configure_pgadmin"
     sed -i "s/__username__/$POSTGRES_USER/g" /servers/servers.json
     sed -i "s/__host__/$POSTGRES_HOST/g" /servers/servers.json
