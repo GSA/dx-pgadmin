@@ -16,6 +16,6 @@ RUN chown -R pgadmin:pgadmin /servers && chown -R pgadmin:pgadmin /credentials &
     chmod -c 770 /configure-pgadmin.sh && chmod -c 770 /entrypoint.sh 
 USER pgadmin
 
-# TODO: manually set path since kubernetes overwrites it!
+# TODO: (maybe?) manually set path since kubernetes overwrites it!
 
 ENTRYPOINT [ "/entrypoint.sh" ]

@@ -1,4 +1,18 @@
 #!/bin/bash
+# NOTE: I think the shebang up here is causing problems on MCaaS. If you look
+#   at the official dpage/pgadmin Dockerfile and entrypoint, you'll see they use
+#   a plain old 'sh' shell, not 'bash'. I add 'bash' to the image we have here,
+#   because it's easier to do some of the database initialization stuff (see
+#   /scripts/init-dbs.sh) with 'bash' than it is 'sh'. If you try to deploy this 
+#   as is onto MCaaS, you get a permission denied error and a 'cannot find python' 
+#   error, almost like the 'bash' shell has a different path than the shell owned 
+#   by the default pgadmin user. I think we may need to 'chown pgadmin:pgadmin' the 
+#   /bin/bash directory. Otherwise, I'm not sure what the issue is. 
+#
+#   Regardless, be aware this entrypoint as is will work fine locally, but will not
+#   deploy onto MCaaS for the aforementioned permission issue. To see a working 
+#   deployment, go back into the commit history and look at previous iterations of
+#   this entrypoint script.
 
 ##################################
 # CUSTOM SETTINGS CONFIGURATION

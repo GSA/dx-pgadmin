@@ -21,6 +21,11 @@ function get_db_index(){
     done
 }
 
+# PGADMIN contains a master password file for all the database servers it connects to. When you 
+#   log into pgadmin, you will not need to provide database credentials beyond the default pgadmin
+#   login credentials because pgadmin will reference the PGPASSFILE for the database credentials. 
+#   This function uses environment variables to defined in lines 5 - 7 to set up and configure
+#   the PGPASSFILE for the solutionid application databases.
 function configure_pgadmin(){
     if [ -f "/credentials/pgpassfile" ]
     then
@@ -41,6 +46,8 @@ function configure_pgadmin(){
         echo "$POSTGRES_HOST:$POSTGRES_PORT:$i:$user:$password" >> /credentials/pgpassfile
     done
 
+    # Use regex to inject credentials. 
+    # Possible TODO: Use 'envsubst' instead of sed. Would make it cleaner. 
     log "Configuring PGAdmin4's 'servers.json' With Secret Credentials" "configure_pgadmin"
     sed -i "s/__username__/$POSTGRES_USER/g" /servers/servers.json
     sed -i "s/__host__/$POSTGRES_HOST/g" /servers/servers.json

@@ -35,6 +35,8 @@ function list_databases(){
     PGPASSWORD=$POSTGRES_PASSWORD psql --host=$POSTGRES_HOST --port=$POSTGRES_PORT --username=$POSTGRES_USER -lqt
 }
 
+# echos 0 if database exists
+# echos 1 if database doesn't exist
 function database_exists(){
     if list_databases | cut -d \| -f 1 | grep -qw "$1" 
     then
