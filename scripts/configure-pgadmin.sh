@@ -24,6 +24,7 @@ function get_db_index(){
 function configure_pgadmin(){
     if [ -f "/credentials/pgpassfile" ]
     then
+        # clear existing credential file
         > /credentials/pgpassfile
     fi
 
